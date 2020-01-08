@@ -1,13 +1,21 @@
 #include "midi.h"
+#include <stdlib.h>
 
-FILE* midi_open(const char* filename) {
-	return fopen(filename, "r");
+midi* midi_open(const char* filename) {
+	midi* midi = malloc(sizeof(midi));
+	midi->fp = fopen(filename, "r");
+	if (midi->fp) {
+		return midi;
+	}
+
+	return NULL;
 }
 
-int midi_close(FILE* fp) {
-	if (!fclose(fp)) {
-		fp = NULL;
-		return 1;
+int midi_close(midi* midi) {
+	if (midi) {
+		fclose(midi->fp);
+		free(midi);
 	}
-	return 0;
+
+	return 1;
 }
