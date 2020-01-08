@@ -13,4 +13,8 @@ typedef struct {
 mem_file* mem_file_open(const char* filename);
 int mem_file_close(mem_file* file);
 
+uint8_t read_uint8t(mem_file* file);
+uint16_t read_uint16t(mem_file* file);
+uint32_t read_uint32t(mem_file* file);
+
 #endif /* INCLUDE_MEM_FILE_H_ */

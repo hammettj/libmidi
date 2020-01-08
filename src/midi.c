@@ -8,6 +8,11 @@ midi* midi_open(const char* filename) {
 		return NULL;
 	}
 
+	// parse midi header
+	if (read_uint8t(file) != 'M' || read_uint8t(file) != 'T' || read_uint8t(file) != 'h' || read_uint8t(file) != 'd') {
+		return NULL;
+	}
+
 	midi* midi = malloc(sizeof(midi));
 	midi->file = file;
 
