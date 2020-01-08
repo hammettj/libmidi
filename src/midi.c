@@ -1,28 +1,24 @@
 #include "midi.h"
-#include <stdio.h>
+#include "mem_file.h"
 #include <stdlib.h>
 
 midi* midi_open(const char* filename) {
-	midi* midi = malloc(sizeof(midi));
-
-	FILE* fp = fopen(filename, "rb");
-	if (!fseek(fp, 0, SEEK_END)) {
-		midi->len = ftell(fp);
-		if (!fseek(fp, 0, SEEK_SET)) {
-			midi->data = malloc(sizeof(uint8_t) * midi->len);
-			if (fread(midi->data, sizeof(uint8_t), midi->len, fp) == midi->len) {
-				return midi;
-			}
-		}
+	mem_file* file = mem_file_open(filename);
+	if (!file) {
+		return NULL;
 	}
 
-	return NULL;
+	midi* midi = malloc(sizeof(midi));
+	midi->file = file;
+
+	return midi;
 }
 
 int midi_close(midi* midi) {
 	if (midi) {
-		free(midi->data);
+		mem_file_close(midi->file);
 		free(midi);
+		midi = NULL;
 	}
 
 	return 1;

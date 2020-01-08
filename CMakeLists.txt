@@ -9,6 +9,7 @@ set(CMAKE_C_STANDARD 11)
 # library
 add_library(libmidi
 	src/midi.c
+	src/mem_file.c
 )
 target_include_directories(libmidi PUBLIC
 	include
