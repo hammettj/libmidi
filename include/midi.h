@@ -1,8 +1,8 @@
 #ifndef INCLUDE_MIDI_H_
 #define INCLUDE_MIDI_H_
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stddef.h>
 
 typedef struct {
 	uint16_t format;
@@ -13,7 +13,8 @@ typedef struct {
 } header_chunk;
 
 typedef struct {
-	FILE* fp;
+	size_t len;
+	uint8_t* data;
 	header_chunk header;
 } midi;
 
