@@ -1,35 +1,35 @@
+#include "byte_buffer.h"
 #include "midi.h"
-#include "mem_file.h"
 #include <stdlib.h>
 
 midi* midi_open(const char* filename) {
-	mem_file* file = mem_file_open(filename);
-	if (!file) {
+	byte_buffer* buf = byte_buffer_from_file(filename);
+	if (!buf) {
 		return NULL;
 	}
 
 	// parse midi header
-	if (read_uint8t(file) != 'M' || read_uint8t(file) != 'T' || read_uint8t(file) != 'h' || read_uint8t(file) != 'd') {
-		mem_file_close(file);
+	if (read_uint8t(buf) != 'M' || read_uint8t(buf) != 'T' || read_uint8t(buf) != 'h' || read_uint8t(buf) != 'd') {
+		byte_buffer_dispose(buf);
 		return NULL;
 	}
 
-	uint32_t len = read_uint32t(file);
+	uint32_t len = read_uint32t(buf);
 	if (len != 6) { // length should be 6 bytes
-		mem_file_close(file);
+		byte_buffer_dispose(buf);
 		return NULL;
 	}
 
 	midi* midi = malloc(sizeof(midi));
-	midi->file = file;
-	midi->header.format = read_uint16t(file);
-	midi->header.ntracks = read_uint16t(file);
+	midi->buf = buf;
+	midi->header.format = read_uint16t(buf);
+	midi->header.ntracks = read_uint16t(buf);
 
-	uint16_t tickdiv = read_uint16t(file);
+	uint16_t tickdiv = read_uint16t(buf);
 
 	if (tickdiv & (1 << 15)) {
 		// fixme not supported yet..
-		mem_file_close(file);
+		byte_buffer_dispose(buf);
 		free(midi);
 
 		return NULL;
@@ -43,7 +43,7 @@ midi* midi_open(const char* filename) {
 
 int midi_close(midi* midi) {
 	if (midi) {
-		mem_file_close(midi->file);
+		byte_buffer_dispose(midi->buf);
 		free(midi);
 		midi = NULL;
 	}

@@ -1,8 +1,8 @@
 #ifndef INCLUDE_MIDI_H_
 #define INCLUDE_MIDI_H_
 
-#include "mem_file.h"
 #include <stdint.h>
+#include "byte_buffer.h"
 
 typedef struct {
 	uint16_t format;
@@ -13,7 +13,7 @@ typedef struct {
 } header_chunk;
 
 typedef struct {
-	mem_file* file;
+	byte_buffer* buf;
 	header_chunk header;
 } midi;
 
