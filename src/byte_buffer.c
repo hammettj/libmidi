@@ -13,10 +13,13 @@ byte_buffer* byte_buffer_from_file(const char* filename) {
 		if (!fseek(fp, 0, SEEK_SET)) {
 			file->data = malloc(sizeof(uint8_t) * file->len);
 			if (fread(file->data, sizeof(uint8_t), file->len, fp) == file->len) {
+				fclose(fp);
 				return file;
 			}
 		}
 	}
+
+	fclose(fp);
 	return NULL;
 }
 
