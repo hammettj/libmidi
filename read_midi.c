@@ -11,6 +11,14 @@ int main(int argc, char** argv) {
 		printf("ntracks: %u\n", midi->header.ntracks);
 		printf("timecode: %u\n", midi->header.timecode);
 		printf("ppqn: %u\n", midi->header.ppqn);
+		printf("\n");
+
+		for (int i = 0; i < midi->header.ntracks; ++i) {
+			printf("id: %.4s\n", midi->track_chunks[i].id);
+			printf("len: %u\n", midi->track_chunks[i].len);
+			printf("\n");
+		}
+
 
 		if (midi_close(midi)) {
 			printf("MIDI file closed!\n");

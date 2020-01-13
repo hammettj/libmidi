@@ -13,8 +13,15 @@ typedef struct {
 } header_chunk;
 
 typedef struct {
+	uint8_t id[4];
+	uint32_t len;
+	uint8_t* data;
+} track_chunk;
+
+typedef struct {
 	byte_buffer* buf;
 	header_chunk header;
+	track_chunk* track_chunks;
 } midi;
 
 

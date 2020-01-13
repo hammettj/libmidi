@@ -2,6 +2,8 @@
 #include "midi.h"
 #include <stdlib.h>
 
+void read_track_chunk(track_chunk* chunk, byte_buffer* buf);
+
 midi* midi_open(const char* filename) {
 	byte_buffer* buf = byte_buffer_from_file(filename);
 	if (!buf) {
@@ -23,10 +25,10 @@ midi* midi_open(const char* filename) {
 	midi* midi = malloc(sizeof(midi));
 	midi->buf = buf;
 	midi->header.format = read_uint16t(buf);
-	midi->header.ntracks = read_uint16t(buf);
+	uint16_t ntracks = read_uint16t(buf);
+	midi->header.ntracks = ntracks;
 
 	uint16_t tickdiv = read_uint16t(buf);
-
 	if (tickdiv & (1 << 15)) {
 		// fixme not supported yet..
 		byte_buffer_dispose(buf);
@@ -38,7 +40,20 @@ midi* midi_open(const char* filename) {
 		midi->header.ppqn = tickdiv >> 1;
 	}
 
+	midi->track_chunks = malloc(sizeof(track_chunk) * ntracks);
+	for (uint16_t i = 0; i < ntracks; ++i) {
+		read_track_chunk(&midi->track_chunks[i], midi->buf);
+	}
+
 	return midi;
+}
+
+void read_track_chunk(track_chunk* chunk, byte_buffer* buf) {
+	read(chunk->id, buf, 4);
+	uint32_t len = read_uint32t(buf);
+	chunk->len = len;
+	chunk->data = malloc(sizeof(uint8_t) * len);
+	read(chunk->data, buf, len);
 }
 
 int midi_close(midi* midi) {
