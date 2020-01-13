@@ -51,3 +51,11 @@ uint32_t read_uint32t(byte_buffer* buf) {
 			| buf->data[buf->pos++] << 24
 	);
 }
+
+size_t read(uint8_t* to, byte_buffer* from, size_t n) {
+	size_t i = 0;
+	for (; i < n; ++i) {
+		to[i] = read_uint8t(from);
+	}
+	return i;
+}

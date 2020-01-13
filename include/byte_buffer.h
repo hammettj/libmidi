@@ -16,5 +16,6 @@ int byte_buffer_dispose(byte_buffer* buf);
 uint8_t read_uint8t(byte_buffer* buf);
 uint16_t read_uint16t(byte_buffer* buf);
 uint32_t read_uint32t(byte_buffer* buf);
+size_t read(uint8_t* to, byte_buffer* from, size_t n);
 
 #endif /* INCLUDE_BYTE_BUFFER_H_ */
