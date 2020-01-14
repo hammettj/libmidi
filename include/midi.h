@@ -12,10 +12,19 @@ typedef struct {
 	uint16_t ppqn;
 } header_chunk;
 
+typedef struct midi_event {
+	uint32_t delta_time;
+	uint8_t type;
+	uint32_t len;
+	uint8_t* data;
+	uint8_t meta_type;
+	struct midi_event* next;
+} midi_event;
+
 typedef struct {
 	uint8_t id[4];
 	uint32_t len;
-	uint8_t* data;
+	midi_event* midi_event;
 } track_chunk;
 
 typedef struct {

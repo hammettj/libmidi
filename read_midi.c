@@ -14,8 +14,14 @@ int main(int argc, char** argv) {
 		printf("\n");
 
 		for (int i = 0; i < midi->header.ntracks; ++i) {
-			printf("id: %.4s\n", midi->track_chunks[i].id);
-			printf("len: %u\n", midi->track_chunks[i].len);
+			track_chunk track = midi->track_chunks[i];
+			printf("id: %.4s\n", track.id);
+			printf("len: %u\n", track.len);
+
+			for (midi_event* event = track.midi_event; event->next; event = event->next) {
+				printf("%u\t : type: %.3u\n", event->delta_time, event->type);
+			}
+
 			printf("\n");
 		}
 
