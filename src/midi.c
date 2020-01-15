@@ -132,9 +132,6 @@ midi_event* next_event(byte_buffer* buf) {
     return event;
 }
 
-
-
-
 void read_track_chunk(track_chunk* chunk, byte_buffer* buf) {
 	read(chunk->id, buf, 4);
 	chunk->len = read_uint32t(buf);
@@ -152,6 +149,20 @@ void read_track_chunk(track_chunk* chunk, byte_buffer* buf) {
 int midi_close(midi* midi) {
 	if (midi) {
 		byte_buffer_dispose(midi->buf);
+
+		for (uint16_t i = 0; i < midi->header.ntracks; ++i) {
+			track_chunk track = midi->track_chunks[i];
+
+			midi_event* event = track.midi_event;
+			while (event) {
+				midi_event* next = event->next;
+				free(event->data);
+				free(event);
+				event = next;
+			}
+		}
+
+		free(midi->track_chunks);
 		free(midi);
 		midi = NULL;
 	}
