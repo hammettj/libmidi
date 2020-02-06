@@ -6,20 +6,27 @@
 
 byte_buffer* byte_buffer_from_file(const char* filename) {
 	byte_buffer* file = malloc(sizeof(byte_buffer));
+	if (file) {
+		file->data = NULL;
 
-	FILE* fp = fopen(filename, "rb");
-	if (!fseek(fp, 0, SEEK_END)) {
-		file->len = ftell(fp);
-		if (!fseek(fp, 0, SEEK_SET)) {
-			file->data = malloc(sizeof(uint8_t) * file->len);
-			if (fread(file->data, sizeof(uint8_t), file->len, fp) == file->len) {
-				fclose(fp);
-				return file;
+		FILE* fp = fopen(filename, "rb");
+		if (fp) {
+			if (!fseek(fp, 0, SEEK_END)) {
+				file->len = ftell(fp);
+				if (!fseek(fp, 0, SEEK_SET)) {
+					file->data = malloc(sizeof(uint8_t) * file->len);
+					if (file->data) {
+						if (fread(file->data, sizeof(uint8_t), file->len, fp) == file->len) {
+							fclose(fp);
+							return file;
+						}
+					}
+				}
 			}
+			fclose(fp);
 		}
+		byte_buffer_dispose(file);
 	}
-
-	fclose(fp);
 	return NULL;
 }
 
