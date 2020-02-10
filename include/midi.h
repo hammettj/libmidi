@@ -28,7 +28,6 @@ typedef struct {
 } track_chunk;
 
 typedef struct {
-	byte_buffer* buf;
 	header_chunk header;
 	track_chunk* track_chunks;
 } midi;

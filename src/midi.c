@@ -15,7 +15,6 @@ midi* midi_open(const char* filename) {
 			if (len == 6) { // length should be 6 bytes
 				midi* midi = malloc(sizeof(midi));
 				if (midi) {
-					midi->buf = buf;
 					midi->header.format = read_uint16t(buf);
 					uint16_t ntracks = read_uint16t(buf);
 					midi->header.ntracks = ntracks;
@@ -28,7 +27,7 @@ midi* midi_open(const char* filename) {
 						midi->track_chunks = malloc(sizeof(track_chunk) * ntracks);
 						if (midi->track_chunks) {
 							for (uint16_t i = 0; i < ntracks; ++i) {
-								read_track_chunk(&midi->track_chunks[i], midi->buf);
+								read_track_chunk(&midi->track_chunks[i], buf);
 							}
 							return midi;
 						}
@@ -149,8 +148,6 @@ track_chunk* read_track_chunk(track_chunk* chunk, byte_buffer* buf) {
 
 int midi_close(midi* midi) {
 	if (midi) {
-		byte_buffer_dispose(midi->buf);
-
 		for (uint16_t i = 0; i < midi->header.ntracks; ++i) {
 			track_chunk track = midi->track_chunks[i];
 
