@@ -7,12 +7,18 @@ set(CMAKE_C_STANDARD 11)
 
 
 # library
-add_library(libmidi
+add_library(midi
 	src/midi.c
 	src/byte_buffer.c
 )
-target_include_directories(libmidi PUBLIC
+target_include_directories(midi PUBLIC
 	include
+)
+install(TARGETS midi
+	DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+)
+install(FILES include/midi.h
+	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/libmidi
 )
 
 # example program
@@ -23,5 +29,5 @@ target_include_directories(example PUBLIC
 	include
 )
 target_link_libraries(example
-	libmidi
+	midi
 )
