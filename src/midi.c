@@ -70,11 +70,11 @@ midi_event* next_event(byte_buffer* buf) {
 		event->next = NULL;
 
 		switch (event->type & 0xF0) {
-			case 0x80:
-			case 0x90:
-			case 0xA0:
-			case 0xB0:
-			case 0xE0:
+			case TYPE_NOTE_OFF:
+			case TYPE_NOTE_ON:
+			case TYPE_POLYPHONIC_PRESSURE:
+			case TYPE_CONTROL_CHANGE:
+			case TYPE_PITCH_BEND:
 				{
 					event->len = 2;
 					if ((event->data = malloc(sizeof(uint8_t) * event->len))) {
@@ -83,8 +83,8 @@ midi_event* next_event(byte_buffer* buf) {
 					}
 					break;
 				}
-			case 0xC0:
-			case 0xD0:
+			case TYPE_PROGRAM_CHANGE:
+			case TYPE_CHANNEL_PRESSURE:
 				{
 					event->len = 1;
 					if ((event->data = malloc(sizeof(uint8_t) * event->len))) {
@@ -96,8 +96,8 @@ midi_event* next_event(byte_buffer* buf) {
 			case 0xF0:
 				{
 					switch(event->type) {
-						case 0xF0:
-						case 0xF7:
+						case TYPE_SYSEX:
+						case TYPE_SYSEX2:
 							{
 								event->len = read_var_length(buf);
 								if ((event->data = malloc(sizeof(uint8_t) * event->len))) {
@@ -106,7 +106,7 @@ midi_event* next_event(byte_buffer* buf) {
 								}
 								break;
 							}
-						case 0xFF:
+						case TYPE_META:
 							{
 								event->meta_type = read_uint8t(buf);
 								event->len = read_var_length(buf);
