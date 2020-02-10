@@ -18,8 +18,8 @@ int main(int argc, char** argv) {
 			printf("id: %.4s\n", track.id);
 			printf("len: %u\n", track.len);
 
-			for (midi_event* event = track.midi_event; event->next; event = event->next) {
-				printf("%u\t : type: %.3u\n", event->delta_time, event->type);
+			for (midi_event* event = track.midi_event; event != NULL; event = event->next) {
+				printf("%u\t : type: 0x%02X \t meta_type: 0x%02X\n", event->delta_time, event->type, event->meta_type);
 			}
 
 			printf("\n");
