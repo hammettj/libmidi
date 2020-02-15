@@ -11,6 +11,7 @@ typedef struct {
 } byte_buffer;
 
 byte_buffer* byte_buffer_from_file(const char* filename);
+byte_buffer* byte_buffer_from_array(const uint8_t* array, size_t size);
 int byte_buffer_dispose(byte_buffer* buf);
 
 uint8_t read_uint8t(byte_buffer* buf);

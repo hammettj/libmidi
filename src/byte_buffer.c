@@ -2,32 +2,47 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 uint16_t be16(uint16_t x);
 uint32_t be32(uint32_t x);
 
 byte_buffer* byte_buffer_from_file(const char* filename) {
-	byte_buffer* file = malloc(sizeof(byte_buffer));
-	if (file) {
-		file->data = NULL;
+	byte_buffer* buf = malloc(sizeof(byte_buffer));
+	if (buf) {
+		buf->data = NULL;
 
 		FILE* fp = fopen(filename, "rb");
 		if (fp) {
 			if (!fseek(fp, 0, SEEK_END)) {
-				file->len = ftell(fp);
+				buf->len = ftell(fp);
 				if (!fseek(fp, 0, SEEK_SET)) {
-					file->data = malloc(sizeof(uint8_t) * file->len);
-					if (file->data) {
-						if (fread(file->data, sizeof(uint8_t), file->len, fp) == file->len) {
+					buf->data = malloc(sizeof(uint8_t) * buf->len);
+					if (buf->data) {
+						if (fread(buf->data, sizeof(uint8_t), buf->len, fp) == buf->len) {
 							fclose(fp);
-							return file;
+							return buf;
 						}
 					}
 				}
 			}
 			fclose(fp);
 		}
-		byte_buffer_dispose(file);
+		byte_buffer_dispose(buf);
+	}
+	return NULL;
+}
+
+byte_buffer* byte_buffer_from_array(const uint8_t* array, size_t size) {
+	byte_buffer* buf = malloc(sizeof(byte_buffer));
+	if (buf) {
+		if ((buf->data = malloc(size))) {
+			memcpy(buf->data, array, size);
+			buf->len = size;
+
+			return buf;
+		}
+		byte_buffer_dispose(buf);
 	}
 	return NULL;
 }
