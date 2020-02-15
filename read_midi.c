@@ -3,8 +3,14 @@
 #include "midi.h"
 
 int main(int argc, char** argv) {
+	byte_buffer* buf = byte_buffer_from_file("super-mario.mid");
+	if (!buf) {
+		printf("could not load file!\n");
+		return 1;
+	}
+
 	midi* midi = NULL;
-	if ((midi = midi_open("super-mario.mid"))) {
+	if ((midi = midi_open(buf))) {
 		printf("MIDI file opened!\n");
 
 		printf("format: %u\n", midi->header.format);
@@ -25,7 +31,7 @@ int main(int argc, char** argv) {
 			printf("\n");
 		}
 
-
+		byte_buffer_dispose(buf);
 		if (midi_close(midi)) {
 			printf("MIDI file closed!\n");
 		} else {
