@@ -2,7 +2,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <endian.h>
+
+uint16_t be16(uint16_t x);
+uint32_t be32(uint32_t x);
 
 byte_buffer* byte_buffer_from_file(const char* filename) {
 	byte_buffer* file = malloc(sizeof(byte_buffer));
@@ -44,14 +46,14 @@ uint8_t read_uint8t(byte_buffer* buf) {
 }
 
 uint16_t read_uint16t(byte_buffer* buf) {
-	return htobe16(
+	return be16(
 			  buf->data[buf->pos++]
 			| buf->data[buf->pos++] << 8
 	);
 }
 
 uint32_t read_uint32t(byte_buffer* buf) {
-	return htobe32(
+	return be32(
 			  buf->data[buf->pos++]
 			| buf->data[buf->pos++] << 8
 			| buf->data[buf->pos++] << 16
@@ -65,4 +67,18 @@ size_t read(uint8_t* to, byte_buffer* from, size_t n) {
 		to[i] = read_uint8t(from);
 	}
 	return i;
+}
+
+uint16_t be16(uint16_t x) {
+	if (__BYTE_ORDER == __LITTLE_ENDIAN) {
+		return (((((x) >> 8) & 0xff) | (((x) & 0xff) << 8)));
+	}
+	return x;
+}
+
+uint32_t be32(uint32_t x) {
+	if (__BYTE_ORDER == __LITTLE_ENDIAN) {
+		return ((((x) & 0xff000000u) >> 24) | (((x) & 0x00ff0000u) >> 8) | (((x) & 0x0000ff00u) << 8) | (((x) & 0x000000ffu) << 24));
+	}
+	return x;
 }
