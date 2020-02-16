@@ -44,7 +44,7 @@ typedef struct {
 } midi;
 
 
-midi* midi_open(byte_buffer* buf);
-int midi_close(midi* midi);
+midi* midi_load(byte_buffer* buf);
+int midi_dispose(midi* midi);
 
 #endif /* INCLUDE_MIDI_H_ */

@@ -10,8 +10,8 @@ int main(int argc, char** argv) {
 	}
 
 	midi* midi = NULL;
-	if ((midi = midi_open(buf))) {
-		printf("MIDI file opened!\n");
+	if ((midi = midi_load(buf))) {
+		printf("MIDI loaded!\n");
 
 		printf("format: %u\n", midi->header.format);
 		printf("ntracks: %u\n", midi->header.ntracks);
@@ -32,14 +32,14 @@ int main(int argc, char** argv) {
 		}
 
 		byte_buffer_dispose(buf);
-		if (midi_close(midi)) {
-			printf("MIDI file closed!\n");
+		if (midi_dispose(midi)) {
+			printf("MIDI closed!\n");
 		} else {
-			printf("error closing MIDI file!\n");
+			printf("error disposing MIDI!\n");
 			return 1;
 		}
 	} else {
-		printf("error opening MIDI file!\n");
+		printf("error loading MIDI!\n");
 		return 1;
 	}
 

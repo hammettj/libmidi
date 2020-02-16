@@ -6,7 +6,7 @@
 
 track_chunk* read_track_chunk(track_chunk* chunk, byte_buffer* buf);
 
-midi* midi_open(byte_buffer* buf) {
+midi* midi_load(byte_buffer* buf) {
 	// parse midi header
 	if (read_uint8t(buf) == 'M' && read_uint8t(buf) == 'T' && read_uint8t(buf) == 'h' && read_uint8t(buf) == 'd') {
 		uint32_t len = read_uint32t(buf);
@@ -141,7 +141,7 @@ track_chunk* read_track_chunk(track_chunk* chunk, byte_buffer* buf) {
 	return chunk;
 }
 
-int midi_close(midi* midi) {
+int midi_dispose(midi* midi) {
 	if (midi) {
 		for (uint16_t i = 0; i < midi->header.ntracks; ++i) {
 			track_chunk track = midi->track_chunks[i];
