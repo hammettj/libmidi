@@ -4,6 +4,12 @@
 #include <stdio.h>
 #include <string.h>
 
+struct byte_buffer {
+	size_t pos;
+	size_t len;
+	uint8_t* data;
+};
+
 uint16_t be16(uint16_t x);
 uint32_t be32(uint32_t x);
 

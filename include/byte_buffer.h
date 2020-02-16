@@ -4,11 +4,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
-typedef struct {
-	size_t pos;
-	size_t len;
-	uint8_t* data;
-} byte_buffer;
+struct byte_buffer;
+typedef struct byte_buffer byte_buffer;
 
 byte_buffer* byte_buffer_from_file(const char* filename);
 byte_buffer* byte_buffer_from_array(const uint8_t* array, size_t size);
